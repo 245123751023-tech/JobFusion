@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Info - JobFusion</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+            color: white;
+        }
+        .btn-gradient {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+        input.form-control, select.form-select {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="glass-card">
+    <h2 class="text-center mb-4">Basic Information</h2>
+    <form method="post" action="{% url 'page1' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="fullname" class="form-control" value="{{ username }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phno" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-gradient w-100">Next →</button>
+    </form>
+</div>
+</body>
+</html>

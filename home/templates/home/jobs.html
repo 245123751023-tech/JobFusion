@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Listings - Job Fusion</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: "Inter", system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #161b22;
+    }
+    .navbar .btn-outline-light {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transition: all 0.2s ease;
+    }
+    .navbar .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    /* Search Bar */
+    .form-control {
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e6edf3;
+    }
+    .form-control::placeholder {
+      color: #8b949e;
+    }
+    .btn-success {
+      border-radius: 8px;
+    }
+
+    /* Jobs Section */
+    .job-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+    }
+    .job-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: rgba(13,110,253,0.12);
+      border-color: rgba(0,180,255,0.4);
+    }
+
+    .card-title {
+      color: #58a6ff;
+    }
+    .text-muted {
+      color: #8b949e !important;
+    }
+    .badge {
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      border-radius: 8px;
+      background-color: #0d6efd;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0b5ed7;
+    }
+
+    /* Alert for empty state */
+    .text-center.text-muted {
+      color: #8b949e;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+      .job-card { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+    <div class="d-flex">
+      <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+{% if alert %}
+  <script>alert("Deleted Successfully!");</script>
+{% endif %}
+
+<!-- Search Bar -->
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form method="POST" action="" class="d-flex">
+        {% csrf_token %}
+        <input type="search" name="key" class="form-control me-2" placeholder="Search by any keywords...">
+        <button type="submit" class="btn btn-success">Search</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Jobs Section -->
+<div class="container mt-5">
+  <h2 class="text-center fw-bold mb-4" style="color:#58a6ff;">Available Jobs</h2>
+
+  {% if jobs_data %}
+    <div class="row g-4">
+      {% for i in jobs_data %}
+        <div class="col-md-4">
+          <div class="job-card h-100">
+            <h5 class="card-title fw-bold">{{ i.job }}</h5>
+            <h6 class="text-muted">{{ i.company_name }}</h6>
+            <p class="text-success fw-semibold">{{ i.salary_range }}</p>
+            <p class="card-text">{{ i.desc }}</p>
+            <div class="mb-2">
+              <span class="badge bg-success">{{ i.location }}</span>
+              <span class="badge bg-info text-dark">{{ i.job_type }}</span>
+            </div>
+            <small class="text-muted">Posted on {{ i.posted_on }}</small>
+
+            {% if profile.user.postjob.id != i.id %}
+              <div class="mt-3">
+                <a href="{% url 'viewjob' i.id %}" class="btn btn-primary btn-sm w-100">View Details</a>
+              </div>
+            {% else %}
+              <a href="{% url 'deljob' i.id %}" class="text-danger mt-3 d-block">Delete this job</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center mt-5 text-muted">No jobs available right now.</p>
+  {% endif %}
+</div>
+
+</body>
+</html>

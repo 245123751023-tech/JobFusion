@@ -1,0 +1,332 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Generator - Job Fusion</title>
+
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+<style>
+body {
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100vh;
+}
+.navbar { background: #161b22; }
+.navbar .btn-outline-light { border-color: #58a6ff; color: #58a6ff; }
+.navbar .btn-outline-light:hover { background: #58a6ff; color: #0d1117; }
+textarea {
+  width: 100%;
+  height: 75vh;
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  resize: none;
+}
+#output-box {
+  min-height: 75vh;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.resume-container {
+  background: white;
+  color: #222;
+  padding: 35px;
+  width: 100%;
+  border-radius: 12px;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+}
+.resume-header { text-align: center; margin-bottom: 25px; }
+.resume-header h1 { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+.resume-header p { margin: 0; font-size: 14px; color: #555; }
+.resume-section { margin-top: 20px; }
+.resume-section-title {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+  margin-bottom: 8px;
+  padding-bottom: 2px;
+  color: #007bff;
+}
+ul { padding-left: 20px; margin: 5px 0; }
+li { margin-bottom: 5px; }
+.btn-dark { background: #21262d; border-color: #58a6ff; }
+.btn-dark:hover { background: #58a6ff; color: #0d1117; }
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+    <div class="d-flex">
+      <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+
+    <!-- LEFT: TEXTAREA INPUT -->
+    <div class="col-md-5">
+      <h3 class="fw-bold mb-3">Your Resume Data</h3>
+      <textarea id="resume-input">
+Name:
+{{ profile.full_name|default:"Your Name"|escapejs }}
+Email:
+{{ request.user.email|default:"you@example.com"|escapejs }}
+Phone:
+{{ profile.phone|default:"000-000-0000"|escapejs }}
+Current Position:
+{{ profile.Role|default:"Your Role"|escapejs }}
+Bio:
+{{ profile.bio|default:"Add your bio here..."|escapejs }}
+Skills:
+{{ profile.skills|default:"Python, Django"|escapejs }} {{ profile.otherskills|default:""|escapejs }}
+Education:
+Graduation Details:
+College Name: {{ profile.gclg }}
+Starting Year: {{ profile.gstartingyear }}
+Ending Year: {{ profile.gendingyear }}
+Branch: {{ profile.gbranch }}
+CGPA: {{ profile.gcgpa }}
+College Address: {{ profile.gclgadd }}
+Intermediate Details:
+College Name: {{ profile.iclg }}
+Starting Year: {{ profile.istartingyear }}
+Ending Year: {{ profile.iendingyear }}
+Branch: {{ profile.ibranch }}
+Marks: {{ profile.imarks }}
+School Details:
+School Name: {{ profile.schoolname }}
+Year of Passing: {{ profile.sscyear }}
+Projects:
+{{ profile.projects|default:"-" }}
+Experience:
+{{ profile.experience|default:"-" }}
+Certifications:
+{{ profile.certifications|default:"-" }}
+Contact:
+Phone: {{ profile.phone|default:"000-000-0000"|escapejs }}
+Location: {{ profile.location|default:"Your City"|escapejs }}
+LinkedIn: {{ profile.liurl|default:"-"|escapejs }}
+</textarea>
+
+      <button class="btn btn-primary mt-3 w-100" id="generate-btn">Generate Resume</button>
+    </div>
+
+    <!-- RIGHT: RESUME OUTPUT -->
+    <div class="col-md-7">
+      <h3 class="fw-bold mb-3">Generated Resume</h3>
+      <div id="output-box">Waiting for generation...</div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button id="download-pdf" class="btn btn-primary w-33">Download PDF</button>
+        <button id="download-docx" class="btn btn-dark w-33">Download DOCX</button>
+        <button id="clear-output" class="btn btn-secondary w-33">Clear Output</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.1/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script>
+  // Clear previous AI output
+  localStorage.removeItem("resume_output");
+  document.getElementById("output-box").innerHTML = "Waiting for generation...";
+
+  // Clear Output Button
+  document.getElementById("clear-output").onclick = () => {
+    document.getElementById("output-box").innerHTML = "Waiting for generation...";
+    localStorage.removeItem("resume_output");
+  };
+
+  // Load previous input
+  const storedInput = localStorage.getItem("resume_input");
+  if (storedInput) document.getElementById("resume-input").value = storedInput;
+
+  // Load previous output
+  document.getElementById("output-box").innerHTML =
+    localStorage.getItem("resume_output") || "Waiting for generation...";
+
+  // Generate Resume
+  document.getElementById("generate-btn").onclick = async () => {
+    const text = document.getElementById("resume-input").value.trim();
+    if (!text) return alert("Enter details first!");
+
+    localStorage.setItem("resume_input", text);
+
+    const response = await fetch("{% url 'enhance_section' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await response.json();
+    const enhancedText = data.enhanced || text;
+
+    const html = buildResumeHTML(enhancedText);
+    document.getElementById("output-box").innerHTML = html;
+    localStorage.setItem("resume_output", html);
+  };
+
+  // Build Resume UI
+  function buildResumeHTML(text) {
+    const lines = text.split("\n").map(l => l.trim());
+    let sections = {
+      name: "", career: "", bio: "", skills: "",
+      graduation: "", intermediate: "", school: "",
+      projects: "", experience: "", certifications: "", contact: ""
+    };
+
+    let current = "";
+    lines.forEach(line => {
+      if (/^Name:/i.test(line)) current = "name";
+      else if (/^Career Objective:/i.test(line)) current = "career";
+      else if (/^Bio:/i.test(line)) current = "bio";
+      else if (/^Skills:/i.test(line)) current = "skills";
+      else if (/^Graduation Details:/i.test(line)) current = "graduation";
+      else if (/^Intermediate Details:/i.test(line)) current = "intermediate";
+      else if (/^School Details:/i.test(line)) current = "school";
+      else if (/^Projects:/i.test(line)) current = "projects";
+      else if (/^Experience:/i.test(line)) current = "experience";
+      else if (/^Certifications:/i.test(line)) current = "certifications";
+      else if (/^Contact:/i.test(line)) current = "contact";
+
+      if (current) {
+        if (sections[current])
+          sections[current] += "\n" + line.replace(/^.*?:\s*/, "");
+        else
+          sections[current] = line.replace(/^.*?:\s*/, "");
+      }
+    });
+
+    return `
+      <div id="resume-box" class="resume-container">
+        <div class="resume-header">
+          <h1>${sections.name || "Your Name"}</h1>
+          <p>${sections.contact.replace(/\n/g, " | ") || "Email | Phone | Location"}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Career Objective</div>
+          <p>${sections.career}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Summary</div>
+          <p>${sections.bio}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Skills</div>
+          <ul>${(sections.skills || "").split(",").map(s => `<li>${s.trim()}</li>`).join("")}</ul>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Graduation Details</div>
+          <p>${sections.graduation.split("\n").filter(l => l).join("<br>")}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Intermediate Details</div>
+          <p>${sections.intermediate.split("\n").filter(l => l).join("<br>")}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">School Details</div>
+          <p>${sections.school.split("\n").filter(l => l).join("<br>")}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Projects</div>
+          <p>${sections.projects.replace(/\n/g, "<br>")}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Experience</div>
+          <p>${sections.experience.replace(/\n/g, "<br>")}</p>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Certifications</div>
+          <p>${sections.certifications.replace(/\n/g, "<br>")}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  // ✅ Updated PDF Download (Smaller font look)
+  document.getElementById("download-pdf").onclick = async () => {
+    const element = document.getElementById("resume-box");
+    if (!element) return alert("Generate resume first!");
+
+    const canvas = await html2canvas(element, { scale: 1.3 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jspdf.jsPDF("p", "pt", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const ratio = imgProps.height / imgProps.width;
+
+    const newWidth = pdfWidth * 0.85;  // shrink for smaller-looking font
+    const newHeight = newWidth * ratio;
+
+    let heightLeft = newHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 30, 20, newWidth, newHeight);
+    heightLeft -= pdfHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - newHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 30, position, newWidth, newHeight);
+      heightLeft -= pdfHeight;
+    }
+
+    pdf.save("resume.pdf");
+  };
+
+  // DOCX download using global docx library (NO MODULE ERRORS)
+  document.getElementById("download-docx").onclick = async () => {
+    const element = document.getElementById("resume-box");
+    if (!element) return alert("Generate resume first!");
+
+    const html = element.innerText;
+
+    const doc = new docx.Document({
+      sections: [{ children: [new docx.Paragraph(html)] }]
+    });
+
+    const blob = await docx.Packer.toBlob(doc);
+    saveAs(blob, "resume.docx");
+  };
+
+</script>
+
+</body>
+</html>

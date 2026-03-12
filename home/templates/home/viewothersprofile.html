@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ profile.full_name|default:profile.user.username }} — JobFusion Profile</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <style>
+    /* Base Aesthetic */
+    body {
+      background: radial-gradient(circle at 20% 30%, #0d1117 0%, #0a0c10 100%);
+      color: #e6edf3;
+      font-family: "Inter", system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { color: #79c0ff; }
+
+    /* Container */
+    .profile-container {
+      max-width: 950px;
+      margin: 60px auto;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    /* Profile Picture */
+    .profile-pic {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #0d6efd;
+      display: block;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 0 25px rgba(13,110,253,0.4);
+      transition: transform 0.3s ease;
+    }
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+
+    /* Return Button */
+    .btn-return {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    /* Profile Info */
+    .profile-info h4 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #f0f6fc;
+    }
+
+    .profile-info p strong {
+      color: #9cd2ff;
+    }
+
+    /* Sections */
+    .section-title {
+      font-weight: 600;
+      color: #58a6ff;
+      border-left: 4px solid #0d6efd;
+      padding-left: 10px;
+      margin-top: 35px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Scrollable Areas */
+    .scrollable-box {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .scrollable-box::-webkit-scrollbar { width: 6px; }
+    .scrollable-box::-webkit-scrollbar-thumb {
+      background-color: rgba(13,110,253,0.6);
+      border-radius: 3px;
+    }
+
+    /* User Cards (Similar Users) */
+    .user-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    .user-card:hover {
+      background: rgba(13,110,253,0.12);
+      border-color: rgba(0,180,255,0.4);
+      transform: translateY(-3px);
+    }
+
+    /* Posts Section */
+    .card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.01);
+      border-color: rgba(13,110,253,0.3);
+      background: rgba(13,110,253,0.15);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      color: #6c757d;
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 576px) {
+      .profile-container { padding: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+
+    <!-- Return Home -->
+    <div class="btn-return">
+      <a href="{% url 'home' %}" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-house-door"></i> Return to Home
+      </a>
+    </div>
+
+    <!-- Profile Picture -->
+    {% if profile %}
+      {% if profile.profile_pic %}
+        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+      {% else %}
+        <img src="{% static 'images/professionals1.png' %}" alt="Default Profile" class="profile-pic">
+      {% endif %}
+    {% endif %}
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+      <h4>{{ profile.full_name|default:profile.user.username }}</h4>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <p><strong>Username:</strong> {{ profile.user.username }}</p>
+          <p><strong>Email:</strong> {{ profile.user.email|default:"Not Provided" }}</p>
+          <p><strong>LinkedIn:</strong> {{ profile.liurl|default:"Not Provided" }}</p>
+          <a href="{% url 'chat' profile.user.username %}" class="btn btn-success btn-sm mt-2"><i class="bi bi-chat-dots"></i> Message</a>
+          <p><strong>Phone:</strong> {{ profile.phone|default:"Not Provided" }}</p>
+          <p><strong>Location:</strong> {{ profile.location|default:"Not Provided" }}</p>
+          {% if profile.bio %}
+            <p><strong>Bio:</strong> {{ profile.bio|default:"Not Provided" }}</p>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6">
+          {% if profile.Role not in "HR Manager Recruiter" %}
+            <p><strong>Resume:</strong>
+              {% if profile.resume %}
+                <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-sm btn-outline-info">View Resume</a>
+              {% else %}
+                <span class="text-muted">No Resume Uploaded</span>
+              {% endif %}
+            </p>
+            <p><strong>Skills:</strong> {{ profile.skills|default:"Not Provided" }}</p>
+            <p><strong>Other Skills:</strong> {{ profile.otherskills|default:"Not Provided" }}</p>
+            <p><strong>Experience:</strong> {{ profile.exp|default:"Not Provided" }}</p>
+            <p><strong>Graduation College:</strong> {{ profile.gclg|default:"Not Provided" }}</p>
+            <p><strong>Years:</strong> {{ profile.gstartingyear|default:"-" }} - {{ profile.gendingyear|default:"-" }}</p>
+            <p><strong>Branch:</strong> {{ profile.gbranch|default:"Not Provided" }}</p>
+            <p><strong>CGPA:</strong> {{ profile.gcgpa|default:"Not Provided" }}</p>
+            <p><strong>College Address:</strong> {{ profile.gclgadd|default:"Not Provided" }}</p>
+          {% else %}
+            <p><strong>Company:</strong> {{ profile.cname|default:"Not Provided" }}</p>
+            <p><strong>Industry:</strong> {{ profile.industry|default:"Not Provided" }}</p>
+            <p><strong>Address:</strong> {{ profile.cadd|default:"Not Provided" }}</p>
+            <p><strong>Hiring Needs:</strong> {{ profile.hiringneeds|default:"Anyone" }}</p>
+            <p><strong>Official Email:</strong> {{ profile.cemail|default:"Not Provided" }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Posts -->
+      {% if posts %}
+        <h5 class="section-title"><i class="bi bi-journal-richtext"></i> Posts</h5>
+        <div class="scrollable-box">
+          {% for post in posts %}
+            <div class="card mb-2 p-3">
+              {% if post.file %}
+                <a href="{{ post.file.url }}" target="_blank" class="btn btn-sm btn-outline-info mb-2">View Post</a>
+              {% endif %}
+              <p>{{ post.description|default:"No description" }}</p>
+              <small class="text-muted">Posted on {{ post.posted_on|date:"d M Y" }}</small>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Similar Users -->
+      <h5 class="section-title"><i class="bi bi-people"></i> Similar Users</h5>
+      {% if usersdata %}
+        <div class="scrollable-box">
+          {% for i in usersdata %}
+            {% if i.user != user %}
+              <div class="user-card">
+                <strong>{{ i.full_name }}</strong><br>
+                <small class="text-muted">{{ i.Role }}</small><br>
+                <a href="{% url 'chat' i.user.username %}" class="btn btn-success btn-sm mt-2"><i class="bi bi-chat-dots"></i> Message</a>
+
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No similar users found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer>
+    <small>⚙️ JobFusion — Deep-Tech Network • Profile Page • {{ profile.user.username }}</small>
+  </footer>
+</body>
+</html>

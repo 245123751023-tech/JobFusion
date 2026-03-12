@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - JOB-FUSION</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+        <div class="d-flex">
+            <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Form Section -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Post a Job</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" name="jobtitle" maxlength="20" required class="form-control" placeholder="Data Scientist, ML Engineer">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" name="companyname" maxlength="20" required class="form-control" placeholder="Google, Microsoft">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" maxlength="50" required class="form-control" placeholder="City, State">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Job Type</label>
+                            <select name="jobtype" class="form-select" required>
+                                <option value="Full Time">Full Time</option>
+                                <option value="Intern">Intern</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Salary Range</label>
+                            <input type="text" name="salary_range" id="salary_range" required class="form-control" placeholder="1L, 3.45L...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="desc" maxlength="200" required class="form-control" rows="3" placeholder="About the job role/post"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Requirements</label>
+                            <textarea name="req" required class="form-control" rows="2" placeholder="Skills, qualifications, etc."></textarea>
+                        </div>
+
+                        {% if messages %}
+                            <div class="alert alert-info">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Post Job</button>
+                            <button type="reset" class="btn btn-secondary">Clear All</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

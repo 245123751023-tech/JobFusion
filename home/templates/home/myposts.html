@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Posts - Job Fusion</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: radial-gradient(circle at 20% 30%, #0d1117 0%, #0a0c10 100%);
+      color: #e6edf3;
+      font-family: "Inter", system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    a { color: #58a6ff; text-decoration: none; transition: 0.2s; }
+    a:hover { color: #79c0ff; }
+
+    /* Navbar */
+    .navbar { background: #0d1117; }
+    .navbar .btn-outline-light {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transition: all 0.2s;
+    }
+    .navbar .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    /* Individual Field Card */
+    .field-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    .field-card:hover {
+      background: rgba(13,110,253,0.12);
+      border-color: rgba(0,180,255,0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Input focus effect */
+    input:focus, textarea:focus, input[type="file"]:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 8px rgba(13,110,253,0.5);
+      outline: none;
+    }
+
+    .btn-success, .btn-primary {
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-success:hover { background-color: #198754; }
+    .btn-primary:hover { background-color: #0b5ed7; }
+
+    .post-card-img {
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px 6px 0 0;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.post-card-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6); /* dark overlay */
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 0 0 6px 6px;
+    font-size: 0.9rem;
+}
+
+    .post-card-img:hover { transform: scale(1.05); }
+
+    .text-muted { color: #8b949e !important; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+    <div class="d-flex">
+      <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Upload Form -->
+<div class="container mt-5">
+  <h3 class="text-center fw-bold mb-4">Upload a New Post</h3>
+
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="field-card">
+          <label class="form-label fw-semibold">Caption</label>
+          <input type="text" name="caption" class="form-control" placeholder="Enter Caption" required>
+        </div>
+
+        <div class="field-card">
+          <label class="form-label fw-semibold">Description</label>
+          <textarea name="desc" id="desc" class="form-control" placeholder="Type something about your post" rows="3" required></textarea>
+        </div>
+
+        <div class="field-card">
+          <label class="form-label fw-semibold">Upload Image</label>
+          <input type="file" name="file" class="form-control" accept="image/*" required>
+        </div>
+
+        <div class="field-card text-center">
+          <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+            Upload Post
+          </button>
+        </div>
+      </form>
+
+      {% if messages %}
+        <div class="mt-4">
+          {% for msg in messages %}
+            <div class="alert alert-info text-center py-2">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Posts Section -->
+<!-- Posts Section -->
+<div class="container mt-5 mb-5">
+  <h3 class="text-center fw-bold mb-4">My Posts</h3>
+
+  {% if posts %}
+    <div class="row g-4">
+      {% for post in posts %}
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 position-relative">
+            <img src="{{ post.media_url }}" alt="{{ post.caption }}" class="post-card-img">
+            <div class="card-body text-center">
+              <h5 class="fw-bold mb-1" style="color: #0a0c10;">{{ post.caption }}</h5>
+              <p class="text-muted small mb-1" style="color: #0a0c10;">Posted on {{ post.created_at }}</p>
+
+              {% if post.description %}
+                <p style="color:#0b5ed7;" id="desc-{{ post.id }}">
+                  {{ post.description|truncatewords:30 }}
+                  {% if post.description|length > 200 %}
+                    <span id="dots-{{ post.id }}">...</span>
+                    <span id="more-{{ post.id }}" style="display:none;">{{ post.description|slice:"200:" }}</span>
+                    <a href="javascript:void(0);" onclick="toggleDesc({{ post.id }});" style="color:#0a0c10; text-decoration:underline; margin-left:4px;">Read more</a>
+                  {% endif %}
+                </p>
+              {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-around mb-2">
+              <form method="post" action="{% url 'like_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-success">👍 Like ({{ post.likes.count }})</button>
+              </form>
+              <form method="post" action="{% url 'dislike_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-warning">👎 Dislike ({{ post.dislikes.count }})</button>
+              </form>
+              <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('Post URL copied!');">🔗 Share</button>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+              <form method="post" action="{% url 'delete_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted mt-4">You haven't uploaded any posts yet.</p>
+  {% endif %}
+</div>
+
+<script>
+function toggleDesc(postId) {
+    var dots = document.getElementById("dots-" + postId);
+    var moreText = document.getElementById("more-" + postId);
+    var link = event.target;
+
+    if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        moreText.style.display = "none";
+        link.innerHTML = "Read more";
+    } else {
+        dots.style.display = "none";
+        moreText.style.display = "inline";
+        link.innerHTML = "Read less";
+    }
+}
+</script>

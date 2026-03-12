@@ -1,0 +1,221 @@
+{% load static %}
+<html>
+    <head>
+        <title>Job-Fusion</title>
+        <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+    </head>
+    <body class="bg-light">
+        <!-- Header Section -->
+        <header class="bg-primary text-white text-center py-5">
+            <h1 class="display-4 fw-bold">Unlock Your Future with JobFusion</h1>
+            <p class="lead">Find jobs that fit your skills, experience, and passion</p>
+            <button class="btn btn-warning btn-lg me-2">
+                <a href="{% url 'signup' %}" class="text-dark text-decoration-none">Register</a>
+            </button>
+            <button class="btn btn-outline-light btn-lg bg-light">
+                <a href="{% url 'learnmore' %}" class="text-dark text-decoration-none">Learn More</a>
+            </button>
+        </header><br><br>
+
+        <center>
+            <h2>Discover how JobFusion can help you</h2>
+            <img src="{% static 'images/professionals1' %}" class="img-fluid rounded shadow mb-3" style="max-width: 300px;">
+            <br>
+            <button class="btn btn-primary">
+                <a href="{% url 'signup' %}" class="text-white text-decoration-none">Sign Up into JobFusion</a>
+            </button>
+            <p>*Free trial eligibility determined on log-in</p>
+            <h3><strong>Additional terms may apply</strong></h3>
+        </center>
+
+        <!-- Features Section -->
+        <section class="container my-5">
+            <h2 class="text-center mb-4">Features</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <img src="{% static 'images/i1.png' %}" alt="Smart Job Matching" class="img-fluid rounded shadow" style="max-width: 300px;">
+                    <h5 class="mt-3 fw-bold">Smart Job Matching</h5>
+                </div>
+                <div class="col-md-4">
+                    <img src="https://th.bing.com/th/id/OIP.-0IcauTkqehCjCSGjf-LEwHaEu?w=273&h=180&c=7&r=0&o=5&pid=1.7" alt="Direct Recruiter Messaging" class="img-fluid rounded shadow" style="max-width: 300px;">
+                    <h5 class="mt-3 fw-bold">Direct Recruiter Messaging</h5>
+                </div>
+                <div class="col-md-4">
+                    <img src="https://th.bing.com/th/id/OIP.Qfstx4AdifKUZPPUBZJK-wHaEK?w=284&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Career Growth insights" class="img-fluid rounded shadow">
+                    <h5 class="mt-3 fw-bold">Connect with People</h5>
+                </div>
+                <div class="col-md-4">
+                    <img src="https://th.bing.com/th/id/OIP.U1DbFQZwHpOWdB-xnaRgnwHaE3?w=278&h=182&c=7&r=0&o=5&pid=1.7">
+                    <h5 class="mt-3 fw-bold">Get guidance by Sr.Employees</h5>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section class="py-5 bg-white">
+            <div class="container text-center">
+                <h2 class="fw-bold text-primary mb-4">Why Choose JobFusion?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">95% Success Rate</h5>
+                        <p>Most of our users land interviews within the first 30 days of signing up.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">Trusted by 500+ Companies</h5>
+                        <p>We collaborate with top recruiters across industries to bring you the best opportunities.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">AI-Powered Matching</h5>
+                        <p>Our smart algorithms match you with jobs that truly fit your skills and goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connections Section -->
+        <section class="bg-white py-5">
+            <div class="container text-center">
+                <h2 class="mb-4 text-primary fw-bold">Make New Connections</h2>
+                <p class="lead">Reach out to hiring managers and recruiters via inMail, to indicate interest in an open role.</p>
+                <h3><strong>Grow Professionally!</strong></h3>
+                <img src="{% static 'images/professionals2' %}" alt="Professionals" class="img-fluid rounded shadow-sm mb-4" style="max-width: 300px;">
+
+                <div class="d-flex justify-content-center gap-3">
+                    <button class="btn btn-primary">
+                        <a href="{% url 'login' %}" class="text-white text-decoration-none">Continue with JobFusion</a>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="bg-light py-5">
+            <div class="container text-center">
+                <h2 class="fw-bold text-primary mb-4">How It Works:</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">1. Create Your Profile</h5>
+                        <p>Sign up and showcase your skills, experience, and career goals.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">2. Get Matched</h5>
+                        <p>Our smart system connects you with relevant job opportunities and recruiters.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="fw-bold">3. Start Your Career Move</h5>
+                        <p>Communicate via Mails as a professional, directly with employers, and land your next role faster.</p>
+                    </div>
+                </div>
+                <h1>Your Profile is gaining traction</h1><br>
+                <img src="{% static 'images/professionals5.webp' %}" alt="Profile Traction" class="img-fluid rounded shadow-sm mb-3" style="max-width: 300px;">
+                <h2 class="fw-bold text-primary">Recruiters are noticing your profile</h2>
+                <p class="lead">Stay active, keep your profile updated, and increase your chances of landing the perfect role.</p>
+            </div>
+        </section>
+
+        <!-- Did You Know Section -->
+        <section class="bg-primary text-white py-5">
+            <div class="container text-center">
+                <h2 class="fw-bold mb-4">Did You Know?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <h1>80%</h1>
+                        <p>of recruiters say they prefer candidates who reach out directly.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h1>10,000+</h1>
+                        <p>professionals have already started their career journey with JobFusion.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h1>3x Faster</h1>
+                        <p>Job seekers find opportunities 3 times faster using JobFusion.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Testimonials Section -->
+        <section class="bg-light py-5">
+            <div class="container my-5 text-center">
+                        <h2 class="fw-bold text-primary mb-4">Our User's Reviews</h2>
+                        <marquee>
+                            <img src="{% static 'images/d1.png' %}" alt="Logo 1" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d2.png' %}" alt="Logo 2" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d3.png' %}" alt="Logo 3" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d4.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d5.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d1.png' %}" alt="Logo 1" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d2.png' %}" alt="Logo 2" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d3.png' %}" alt="Logo 3" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d4.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d5.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d1.png' %}" alt="Logo 1" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d2.png' %}" alt="Logo 2" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d3.png' %}" alt="Logo 3" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d4.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d5.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d1.png' %}" alt="Logo 1" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d2.png' %}" alt="Logo 2" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d3.png' %}" alt="Logo 3" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d4.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                            <img src="{% static 'images/d5.png' %}" alt="Logo 4" class="img-fluid mx-3" style="height: 200px;">
+                        </marquee>
+                    </div>
+            <div class="container text-center">
+                <h2 class="fw-bold text-primary mb-4">What Our Users Say</h2>
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <p class="fst-italic">"JobFusion helped me land my dream job within 3 weeks. The direct messaging feature is a game-changer!"</p>
+                        <h6>- Priya Sharma, Software Engineer</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fst-italic">"The career insights gave me confidence and clarity about my next move."</p>
+                        <h6>- Rahul Mehta, Marketing Manager</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fst-italic">"I loved how easy it was to connect with recruiters. Highly recommended!"</p>
+                        <h6>- Ayesha Khan, Data Analyst</h6>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="bg-dark text-light pt-5 pb-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <h5 class="fw-bold">JobFusion</h5>
+                        <p>Connecting Professionals with the right opportunities through smart matching and direct communication.</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5 class="fw-bold">Quick Links</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'home' %}" class="text-light text-decoration-none">Home</a></li>
+                            <li><a href="{% url 'signup' %}" class="text-light text-decoration-none">Register</a></li>
+                            <li><a href="{% url 'login' %}" class="text-light text-decoration-none">Login</a></li>
+                            <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <h5 class="fw-bold">Contact Us</h5>
+                        <p>Email: support@jobfusion.com</p>
+                        <p>Phone: +91 98765 43210</p>
+                        <div>
+                            <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-light me-3"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-light">
+                <div class="text-center">
+                    <small>&copy;2025 JobFusion. All rights reserved.</small>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

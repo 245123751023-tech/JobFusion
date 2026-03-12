@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Chats - JOB-FUSION</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: "Inter", system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #161b22;
+    }
+    .navbar .btn-outline-light {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transition: all 0.2s ease;
+    }
+    .navbar .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    /* Container */
+    .chat-container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 30px;
+    }
+
+    .page-title {
+      font-weight: 600;
+      border-bottom: 2px solid #58a6ff;
+      padding-bottom: 8px;
+      margin-bottom: 30px;
+      color: #58a6ff;
+    }
+
+    /* Chat card */
+    .chat-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 18px 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+    }
+    .chat-card:hover {
+      transform: translateX(6px) scale(1.02);
+      background: rgba(13,110,253,0.15);
+      border-color: rgba(0,180,255,0.4);
+    }
+
+    .chat-link {
+      font-size: 17px;
+      font-weight: 600;
+      color: #58a6ff;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .chat-link:hover {
+      color: #79c0ff;
+      text-decoration: underline;
+    }
+
+    /* Alert */
+    .alert-info {
+      background: rgba(255,255,255,0.05);
+      color: #c9d1d9;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+    <div>
+      <a href="{% url 'home' %}" class="btn btn-outline-light">🏠 Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Chats Section -->
+<div class="chat-container">
+  <h2 class="page-title">💬 My Chats</h2>
+
+  {% if final_users %}
+    <div class="list-group">
+      <div class="row g-3">
+        {% for user in final_users %}
+          <div class="col-md-6">
+            <div class="chat-card">
+              <a href="{% url 'chat' user.user.username %}" class="chat-link">
+                {{ user.user.username }}
+              </a>
+              <a href="{% url 'delchat' user.id %}">🗑️</button>
+              <a href="{% url 'blockchat' user.id %}">🚫</a>
+              </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center py-4">
+      <h5 class="mb-0">No chats yet</h5>
+      <p class="text-muted mb-0">Start a conversation to see it here!</p>
+    </div>
+  {% endif %}
+    <br><br>
+  {%if blocked_users%}
+    <h2>Blocked Chats:</h2>
+    <br>
+    {% for user in blocked_users%}
+      <p><strong>{{ user.fullname }}</strong></p>
+    {%endfor%}
+  {%endif%}
+</div>
+
+</body>
+</html>

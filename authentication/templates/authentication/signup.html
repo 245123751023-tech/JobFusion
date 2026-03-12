@@ -1,0 +1,117 @@
+{% load static %}
+<html>
+<head>
+    <title>Create an Account</title>
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+    <style>
+        /* Gradient Background */
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            font-family: "Inter", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            color: white;
+        }
+
+        /* Logo Styling */
+        .logo {
+            max-height: 100px;
+            margin-bottom: 1rem;
+        }
+
+        /* Stylish Button */
+        .btn-gradient {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border: none;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.2s ease-in-out;
+            border-radius: 30px;
+        }
+
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+
+        a {
+            color: #79c0ff;
+        }
+        a:hover {
+            color: #00c6ff;
+        }
+
+        .form-check-label {
+            font-size: 1rem;
+        }
+
+        h2 {
+            color: #58a6ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card text-center">
+        <!-- Logo -->
+        <img src="{% static 'images/jobmatch1.png' %}" alt="Logo" class="logo">
+
+        <h2 class="mb-4">Create Account</h2>
+
+        <form method="POST" action="{% url 'signup'%}">
+            {% csrf_token %}
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Name</label>
+                <input type="text" name="username" class="form-control" maxlength="15" minlength="5" required>
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Email</label>
+                <input type="email" name="Email" class="form-control" required>
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" maxlength="15" minlength="5" required>
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" maxlength="15" minlength="5" required>
+            </div>
+
+            <div class="form-check mb-3 text-start">
+                <input type="checkbox" name="terms" class="form-check-input" id="terms">
+                <label class="form-check-label" for="terms">I agree to the Terms & Conditions</label>
+            </div>
+
+            {% if messages %}
+                {% for i in messages %}
+                    <p class="text-warning fw-bold">{{ i }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <button type="submit" class="btn btn-gradient w-100 mb-3">🚀 Create Account</button>
+        </form>
+
+        <div>
+            <a href="{% url 'login' %}">Already have an account?</a>
+        </div>
+    </div>
+
+</body>
+</html>

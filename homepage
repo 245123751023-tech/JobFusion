@@ -1,0 +1,506 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home - JobFusion</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    /* background and readability */
+    body {
+      background: url("{% static 'images/bg-1920.jpg' %}") center/cover no-repeat fixed;
+      min-height: 100vh;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.35);
+      z-index:-1;
+    }
+
+    .sidebar-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0d6efd 0%, #00b4ff 100%);
+      color: #fff;
+    }
+    .sidebar-card .card-header {
+      background: rgba(255,255,255,0.06);
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing: .6px;
+    }
+    .feature-item {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+      text-decoration: none;
+      transition: all .18s ease;
+      font-weight:600;
+    }
+    .feature-item:hover {
+      transform: translateX(6px);
+      background: rgba(255,255,255,0.06);
+      text-decoration:none;
+      color:#fff;
+    }
+
+    .recommended-box, .suggested-box {
+      border-radius: 14px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+      overflow: auto;
+    }
+    .recommended-job {
+      padding:10px;
+      border-bottom:1px solid #eee;
+    }
+    .recommended-job:last-child { border-bottom:none; }
+
+    .center-card {
+      background: transparent;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: none;
+    }
+    .center-card .profile-pic {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    @media (max-width:991px){
+      .feature-item { font-size: .95rem; }
+      .center-card { padding:18px; }
+      .center-card .profile-pic { width:140px; height:140px; }
+    }
+
+    /* Floating Chatbot styles */
+    #chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 2000;
+    }
+    #chat-header {
+      background: #28a745;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+    }
+    .chat-box {
+      height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f8f9fa;
+      display: none;
+    }
+    .chat-input {
+      display: none;
+      padding: 8px;
+      border-top: 1px solid #ccc;
+      background: #fff;
+      display: flex;
+      gap: 5px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .chat-input button {
+      background: #28a745;
+      border: none;
+      padding: 6px 10px;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .user-message {
+      background: #007bff;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 10px;
+      margin: 6px 0;
+      text-align: right;
+    }
+    .bot-message {
+      background: #e9ecef;
+      padding: 6px 10px;
+      border-radius: 10px;
+      margin: 6px 0;
+      text-align: left;
+    }
+    .suggested-box {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+  overflow: hidden; /* keep rounded corners */
+  display: flex;
+  flex-direction: column;
+}
+
+.suggested-box .p-3 {
+  max-height: 400px;   /* adjust as needed */
+  overflow-y: auto;    /* vertical scrollbar */
+  padding-right: 8px;  /* spacing so scrollbar doesn’t overlap text */
+}
+
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div>
+        <a href="{% url 'logout' %}" class="btn btn-outline-light">Log Out</a>
+      </div>
+      <div class="mx-auto text-center">
+        <span class="navbar-brand fw-bold fs-3 text-uppercase">JOB-FUSION</span>
+      </div>
+      <div style="width:64px;"></div>
+    </div>
+  </nav>
+
+  <!-- Marquee facts -->
+  <div class="bg-dark text-white py-2">
+    <marquee behavior="scroll" direction="left" scrollamount="6">
+      {% for fact in jobfacts %} ⚡ {{ fact }} &nbsp;&nbsp;&nbsp; {% endfor %}
+    </marquee>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid my-4 flex-grow-1">
+    <div class="row gx-4">
+      <!-- Left sidebar -->
+      <div class="col-lg-2 col-md-3 mb-4">
+        <div class="sidebar-card p-0">
+          <div class="card-header text-center">Features</div>
+          <a class="feature-item" href="{% url 'profile' %}">👤 Profile</a>
+          <a class="feature-item" href="{% url 'myposts' %}">🗂️ My Posts</a>
+          {% if profile.Role == 'HR' or profile.Role == 'Recruiter' or profile.Role == 'Manager' %}
+            <a class="feature-item" href="{% url 'postjobs' %}">📢 Post a Job</a>
+            <a class="feature-item" href="{% url 'appliedpeople' %}">👥 Applied People</a>
+          {% endif %}
+          <a class="feature-item" href="{% url 'chats' %}">Chat</a>
+          <a class="feature-item" href="{% url 'joblistings' %}">💼 Posted Jobs</a>
+          <a class="feature-item" href="{% url 'connections'%}">🤝 Connect with People</a>
+          {% if profile.Role != 'HR' and profile.Role != 'Manager' and profile.Role != 'Recruiter' %}
+            <a class="feature-item" href="{% url 'resumes' %}">📄 My Resume</a>
+            <a class="feature-item" href="{% url 'myapplications' %}">📝 My Applications</a>
+            <a class="feature-item" href="{% url 'courses'%}">Offered Courses</a>
+          {% endif %}
+          <a class="feature-item" href="{% url 'contactus' %}">✉️ Contact Us</a>
+        </div>
+      </div>
+
+      <!-- Recommended jobs -->
+      {% if profile.Role == 'Student' or profile.Role == 'Intern' or profile.Role == 'FreeLancer' %}
+      <div class="col-lg-3 col-md-4 mb-4">
+        <div class="recommended-box p-0">
+          <div class="card-header bg-primary text-white text-center fw-bold py-3">Recommended Jobs</div>
+          <div class="p-3">
+            {% if recommended_jobs %}
+              {% for job in recommended_jobs %}
+                <div class="recommended-job">
+                  <strong>{{ job.job }}</strong><br>
+                  <small class="text-muted">{{ job.company_name }}</small>
+                  <div class="text-end">
+                    <span class="badge bg-info text-dark">{{ job.job_type }}</span>
+                    <span class="badge bg-success">{{ job.location }}</span>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted">No recommended jobs found.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Center -->
+      <div class="{% if profile.Role == 'Student' or profile.Role == 'Intern' or profile.Role == 'FreeLancer' %}col-lg-4 col-md-5{% else %}col-lg-7 col-md-8{% endif %} mb-4 d-flex justify-content-center">
+        <div class="center-card w-100" style="max-width:520px;">
+          <div class="text-center mb-3">
+            <h3 class="fw-bold mb-1">Hi {{ user.username }} 👋</h3>
+            <p class="text-muted mb-2">Welcome back to JobFusion</p>
+          </div>
+          <div class="text-center mb-3">
+            {% if profile.profile_pic %}
+              <img src="{{ profile.profile_pic.url }}" alt="Profile" class="profile-pic mb-2">
+            {% else %}
+              <img src="{% static 'images/professionals1.png' %}" alt="Profile" class="profile-pic mb-2">
+            {% endif %}
+            <div class="fw-bold">{{ profile.Role }}</div>
+          </div>
+          {% if profile.Role != 'HR' and profile.Role != 'Manager' and profile.Role != 'Recruiter' %}
+          <div class="mt-4">
+            <form method="POST" action="{% url 'joblistings' %}">
+              {% csrf_token %}
+              <div class="input-group input-group-lg">
+                <input type="search" name="key" class="form-control" placeholder="Search jobs or keywords...">
+                <button class="btn btn-primary" type="submit">Search</button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Suggested people -->
+      <div class="col-lg-3 col-md-4 mb-4">
+  <div class="suggested-box p-0">
+    <div class="card-header bg-success text-white text-center fw-bold py-3">Suggested People</div>
+    <div class="p-3">
+      {% if users %}
+        {% for i in users %}
+          {% if i.username != user.username %}
+            <div class="recommended-job d-flex gap-3 align-items-center">
+              <div>
+                {% if i.profile_pic %}
+                  <img src="{{ i.profile_pic.url }}" class="rounded-circle" style="width:60px;height:60px;object-fit:cover;">
+                {% else %}
+                  <img src="{% static 'images/professionals2.png' %}" class="rounded-circle" style="width:60px;height:60px;object-fit:cover;">
+                {% endif %}
+              </div>
+              <div class="flex-grow-1">
+                <strong>{{ i.full_name }}</strong><br>
+                <small class="text-muted">{{ i.Role }}</small><br>
+                <small class="d-block text-truncate" style="max-width:180px;">{{ i.bio|truncatewords:10 }}</small>
+                <a href="{% url 'viewothersprofile' i.id %}" class="small">View Profile</a>
+                {% if i.is_friend %}
+                  <a href="{% url 'chat' i.username %}" class="btn btn-success">💬 Message</a>
+                {% elif i.request_sent %}
+                  <p>Request Sent Already!</p>
+                {% elif i.request_received %}
+                  <p>{{ i.full_name }} sent you a request!</p>
+                {% else %}
+                  <a href="{% url 'send_request' i.id %}" class="small">Connect</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center">No suggestions available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="d-flex justify-content-center my-4">
+  <h1 class="text-primary fw-bold">Posts:</h1>
+</div>
+
+<div class="container my-5">
+  {% if posts %}
+    <div class="row g-4 justify-content-center">
+      {% for post in posts %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow border-0 rounded-4 overflow-hidden">
+            <div class="position-relative">
+              <img src="{{ post.media_url }}" 
+                   alt="{{ post.caption }}" 
+                   class="card-img-top" 
+                   style="height: 300px; object-fit: cover; transition: transform 0.3s;">
+              <div class="position-absolute top-0 start-0 p-2 bg-dark bg-opacity-50 text-white rounded-end">
+                {{ post.user.username }} - {{ post.created_at|date:"M d, Y H:i" }}
+              </div>
+            </div>
+            <div class="card-body text-center">
+              {%if post.caption%}
+                <h5 class="card-title fw-bold">{{ post.caption }}</h5>
+              {%endif%}
+              <p class="card-text text-muted">{{ post.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted text-center fs-5 mt-5">No posts available.</p>
+  {% endif %}
+</div>
+
+<style>
+  /* Hover effect for images */
+  .card:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Card shadow on hover */
+  .card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Rounded text overlay */
+  .card .position-absolute {
+    font-size: 0.9rem;
+  }
+
+  /* Smooth button hover */
+  .card-footer .btn:hover {
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+  }
+</style>
+
+
+
+  <!-- Footer -->
+  <footer class="bg-dark text-light mt-auto pt-5 pb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">JobFusion</h5>
+          <p>Connecting Professionals with the right opportunities through smart matching and direct communication.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="{% url 'home' %}" class="text-light text-decoration-none">Home</a></li>
+            <li><a href="{% url 'signup' %}" class="text-light text-decoration-none">Register</a></li>
+            <li><a href="{% url 'login' %}" class="text-light text-decoration-none">Login</a></li>
+            <li><a href="{% url 'contactus' %}" class="text-light text-decoration-none">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">Contact Us</h5>
+          <p>Email: support@jobfusion.com</p>
+          <p>Phone: +91 98765 43210</p>
+        </div>
+      </div>
+      <hr class="border-light">
+      <div class="text-center">
+        <small>&copy;2025 JobFusion. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Chatbot -->
+  <div id="chat-widget">
+    <div id="chat-header" onclick="toggleChat()">💬 Career Assistant</div>
+    <div id="chat-box" class="chat-box">
+      <div class="bot-message">
+        👋 Hi {{ user.username }}! I’m your job portal assistant. Ask me about resumes, job search, or career advice.
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Type your question..." />
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    let chatHistory = [
+      {
+        role: "system",
+        content: `
+                You are a JobFusion career assistant bot integrated into a Django job portal. 
+                Your role is to guide users through the platform’s features and provide career 
+                advice. The portal includes:
+
+                1. User Profile:
+                  - Users can set Role (Student, Intern, Freelancer, HR, Recruiter, Manager).
+                  - Profile contains: skills, education, experience, bio, and profile picture.
+
+                2. Resume Management:
+                  - Users can upload resumes or use AI-powered resume generation.
+                  - Help users improve resumes with suggestions for skills, formatting, and keywords.
+
+                3. Job Search & Applications:
+                  - Students/Interns/Freelancers can search for jobs by keyword.
+                  - Recommended jobs are shown based on their profile and skills.
+                  - They can apply and track applications.
+
+                4. Job Posting & Recruitment:
+                  - HR/Recruiters/Managers can post jobs.
+                  - They can view applied candidates and manage postings.
+
+                5. Networking:
+                  - Users can view suggested people based on skills and connect.
+
+                When answering:
+                - Always be precise (40–70 words).
+                - Give **step-by-step guidance** related to the portal’s features.
+                - If users ask about resumes, suggest improvements.
+                - If they ask about jobs, guide them to searching, applying, or checking recommended jobs.
+                - If they are recruiters, explain posting and tracking.
+                - Stay professional, encouraging, and focused on actionable advice.
+                `
+      }
+    ];
+
+    function toggleChat() {
+      const chatBox = document.getElementById("chat-box");
+      const chatInput = document.querySelector(".chat-input");
+      if (chatBox.style.display === "none") {
+        chatBox.style.display = "block";
+        chatInput.style.display = "flex";
+      } else {
+        chatBox.style.display = "none";
+        chatInput.style.display = "none";
+      }
+    }
+
+    async function getResponse(message) {
+      chatHistory.push({ role: "user", content: message });
+      const response = await fetch("https://chatgpt-42.p.rapidapi.com/chat", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "X-RapidAPI-Key": "e8b8f6f566mshd40c285a27eaec1p1108d0jsn06475eb84d40",
+          "X-RapidAPI-Host": "chatgpt-42.p.rapidapi.com"
+        },
+        body: JSON.stringify({ model: "gpt-4o-mini", messages: chatHistory })
+      });
+      const data = await response.json();
+      const botMessage = data.choices[0].message.content;
+      chatHistory.push({ role: "assistant", content: botMessage });
+      return botMessage;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const message = input.value.trim();
+      if (message === "") return;
+      const chatBox = document.getElementById("chat-box");
+      const userMsg = document.createElement("div");
+      userMsg.className = "user-message";
+      userMsg.innerText = message;
+      chatBox.appendChild(userMsg);
+      const botReply = document.createElement("div");
+      botReply.className = "bot-message";
+      botReply.innerText = "Thinking...";
+      chatBox.appendChild(botReply);
+      const userResponse = await getResponse(message);
+      botReply.innerText = userResponse;
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>

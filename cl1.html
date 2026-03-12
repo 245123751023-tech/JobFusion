@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KaroPitch — Pitch Your Startup to India's Top Investors</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --orange: #FF6B1A;
+    --orange-dim: rgba(255,107,26,0.15);
+    --orange-glow: rgba(255,107,26,0.4);
+    --bg: #0A0A0F;
+    --bg2: #0F0F18;
+    --bg3: #13131E;
+    --text: #E8E8F0;
+    --muted: #7A7A9A;
+    --border: rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,107,26,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,107,26,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift { 0%{background-position:0 0} 100%{background-position:60px 60px} }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 68px;
+    background: rgba(10,10,15,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border); transition: background 0.3s;
+  }
+  .nav-logo { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: #fff; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-orange { background: var(--orange); color: #fff; box-shadow: 0 0 20px rgba(255,107,26,0.3); }
+  .btn-orange:hover { background: #ff7d35; box-shadow: 0 0 35px rgba(255,107,26,0.55); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
+
+  #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 5% 60px; z-index: 1; overflow: hidden; }
+  .orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(255,107,26,0.18) 0%, transparent 70%); filter: blur(60px); animation: orbPulse 4s ease-in-out infinite; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+  @keyframes orbPulse { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8} 50%{transform:translate(-50%,-50%) scale(1.15);opacity:1} }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--orange-dim); border: 1px solid rgba(255,107,26,0.3); padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: var(--orange); margin-bottom: 28px; }
+  h1 { font-family: 'Fraunces', serif; font-size: clamp(2.6rem,6vw,5rem); font-weight: 900; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 24px; background: linear-gradient(135deg,#fff 0%,#ffd4b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  h1 em { font-style: italic; -webkit-text-fill-color: var(--orange); }
+  .hero-sub { max-width: 620px; margin: 0 auto 40px; font-size: 1.05rem; line-height: 1.75; color: var(--muted); }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 72px; }
+  .hero-btns .btn { padding: 13px 28px; font-size: 0.95rem; }
+  .stats-bar { display: flex; flex-wrap: wrap; justify-content: center; border: 1px solid var(--border); border-radius: 16px; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); overflow: hidden; width: 100%; max-width: 800px; }
+  .stat-item { flex: 1; min-width: 160px; padding: 22px 20px; text-align: center; border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; color: var(--orange); display: block; line-height: 1; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+  section { position: relative; z-index: 1; padding: 100px 5%; }
+  .section-tag { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+  h2 { font-family: 'Fraunces', serif; font-size: clamp(2rem,4vw,3rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 16px; }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 520px; }
+
+  #about { background: var(--bg2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1200px; margin: 0 auto; }
+  .about-left p { color: var(--muted); font-size: 1rem; line-height: 1.8; margin-bottom: 36px; }
+  .feature-cards { display: flex; flex-direction: column; gap: 14px; }
+  .feature-card { display: flex; gap: 16px; align-items: flex-start; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--orange); box-shadow: 0 0 25px rgba(255,107,26,0.15); transform: translateX(4px); }
+  .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--orange-dim); border: 1px solid rgba(255,107,26,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .feature-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+  .feature-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  /* ═══ INDIA MAP ═══ */
+  .map-wrapper {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .india-img-wrap {
+    position: relative; width: 100%; max-width: 400px;
+  }
+  .india-img {
+    width: 100%; display: block;
+    filter: drop-shadow(0 0 30px rgba(255,107,26,0.35))
+            drop-shadow(0 0 60px rgba(255,107,26,0.12))
+            brightness(0.9) sepia(0.4) saturate(2) hue-rotate(340deg);
+    opacity: 0.92;
+  }
+  .city-pins { position: absolute; inset: 0; pointer-events: none; }
+  .pin {
+    position: absolute; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center;
+    pointer-events: all; cursor: default;
+  }
+  .pin-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 8px var(--orange), 0 0 18px rgba(255,107,26,0.5);
+    position: relative; z-index: 2;
+    animation: pinGlow 2.5s ease-in-out infinite;
+  }
+  .pin-ring {
+    position: absolute; width: 22px; height: 22px;
+    border-radius: 50%; border: 1.5px solid rgba(255,107,26,0.5);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation: pinRipple 2.5s ease-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pinGlow { 0%,100%{box-shadow:0 0 8px var(--orange),0 0 18px rgba(255,107,26,0.4)} 50%{box-shadow:0 0 14px var(--orange),0 0 30px rgba(255,107,26,0.7)} }
+  @keyframes pinRipple { 0%{transform:translate(-50%,-50%) scale(1);opacity:.8} 100%{transform:translate(-50%,-50%) scale(2.8);opacity:0} }
+  .pin-label {
+    margin-top: 8px; font-size: 0.6rem; font-weight: 700; color: var(--orange);
+    white-space: nowrap; letter-spacing: 0.4px;
+    text-shadow: 0 0 8px rgba(255,107,26,0.9);
+    background: rgba(10,10,15,0.88); padding: 2px 6px; border-radius: 4px;
+    border: 1px solid rgba(255,107,26,0.3);
+  }
+
+  #how { background: var(--bg); }
+  .how-center { max-width: 1100px; margin: 0 auto; }
+  .steps-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; margin-top: 60px; }
+  .steps-row::before { content:''; position:absolute; top:36px; left:12.5%; right:12.5%; height:1px; background:linear-gradient(90deg,transparent,var(--orange),transparent); z-index:0; }
+  .step { display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 20px; position:relative; z-index:1; transition:transform 0.3s; }
+  .step:hover { transform:translateY(-6px); }
+  .step-num-wrap { width:72px; height:72px; border-radius:50%; background:var(--bg2); border:2px solid rgba(255,107,26,0.3); display:flex; align-items:center; justify-content:center; margin-bottom:20px; font-size:1.6rem; transition:all 0.3s; position:relative; }
+  .step:hover .step-num-wrap { background:var(--orange-dim); border-color:var(--orange); box-shadow:0 0 30px rgba(255,107,26,0.4); }
+  .step-count { position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; background:var(--orange); color:#fff; font-size:0.65rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step h3 { font-size:0.95rem; font-weight:700; margin-bottom:8px; }
+  .step p { font-size:0.82rem; color:var(--muted); line-height:1.6; }
+
+  #who { background: var(--bg2); }
+  .who-center { max-width: 1100px; margin: 0 auto; }
+  .who-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:50px; }
+  .who-card { background:var(--bg3); border:1px solid var(--border); border-radius:16px; padding:30px 24px; transition:all 0.3s; }
+  .who-card:hover { border-color:var(--orange); box-shadow:0 0 30px rgba(255,107,26,0.2),0 8px 32px rgba(0,0,0,0.4); transform:translateY(-6px); }
+  .who-icon { font-size:2rem; margin-bottom:14px; }
+  .who-card h3 { font-size:1rem; font-weight:700; margin-bottom:8px; }
+  .who-card p { font-size:0.83rem; color:var(--muted); line-height:1.6; }
+
+  #investors { background: var(--bg); }
+  .investors-center { max-width: 1100px; margin: 0 auto; }
+  .inv-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:50px; }
+  .inv-card { background:var(--bg3); border:1px solid var(--border); border-radius:16px; padding:30px 22px; text-align:center; transition:all 0.3s; }
+  .inv-card:hover { border-color:var(--orange); box-shadow:0 0 25px rgba(255,107,26,0.2); transform:translateY(-5px); }
+  .inv-avatar { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--orange),#ff9f5a); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-family:'Fraunces',serif; font-size:1.4rem; font-weight:700; color:#fff; }
+  .inv-card h3 { font-size:0.95rem; font-weight:700; margin-bottom:4px; }
+  .inv-card .inv-firm { font-size:0.8rem; color:var(--muted); margin-bottom:12px; }
+  .inv-tag { display:inline-block; background:var(--orange-dim); color:var(--orange); border:1px solid rgba(255,107,26,0.3); padding:4px 12px; border-radius:50px; font-size:0.72rem; font-weight:600; }
+
+  #startups { background: var(--bg2); }
+  .startups-center { max-width: 1100px; margin: 0 auto; }
+  .startups-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:50px; }
+  .startup-card { background:var(--bg3); border:1px solid var(--border); border-radius:16px; padding:28px; position:relative; transition:all 0.3s; overflow:hidden; }
+  .startup-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--orange),transparent); opacity:0; transition:opacity 0.3s; }
+  .startup-card:hover { border-color:rgba(255,107,26,0.4); box-shadow:0 0 40px rgba(255,107,26,0.18),0 12px 40px rgba(0,0,0,0.5); transform:translateY(-6px); }
+  .startup-card:hover::before { opacity:1; }
+  .startup-logo { font-size:2.4rem; margin-bottom:14px; }
+  .startup-meta { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .badge { font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:4px; }
+  .badge-cat { background:rgba(255,255,255,0.07); color:var(--text); }
+  .badge-stage { background:var(--orange-dim); color:var(--orange); border:1px solid rgba(255,107,26,0.3); }
+  .startup-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+  .startup-card p { font-size:0.83rem; color:var(--muted); line-height:1.6; margin-bottom:16px; }
+  .startup-city { font-size:0.78rem; color:var(--muted); display:flex; align-items:center; gap:5px; }
+  .startup-city::before { content:'📍'; }
+
+  #cta { background:var(--bg); text-align:center; padding:120px 5%; position:relative; overflow:hidden; }
+  .cta-orb { position:absolute; width:700px; height:500px; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(ellipse,rgba(255,107,26,0.15) 0%,transparent 65%); filter:blur(40px); pointer-events:none; }
+  #cta .cta-inner { position:relative; z-index:1; max-width:700px; margin:0 auto; }
+  #cta h2 { font-size:clamp(2.2rem,5vw,3.8rem); margin-bottom:18px; }
+  #cta p { color:var(--muted); font-size:1rem; line-height:1.75; margin-bottom:40px; }
+  .cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .cta-btns .btn { padding:14px 32px; font-size:0.95rem; }
+
+  footer { background:var(--bg2); border-top:1px solid var(--border); padding:60px 5% 40px; position:relative; z-index:1; }
+  .footer-inner { max-width:1100px; margin:0 auto; }
+  .footer-top { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; margin-bottom:50px; }
+  .footer-brand .nav-logo { font-size:1.6rem; margin-bottom:10px; display:block; }
+  .footer-brand p { font-size:0.85rem; color:var(--muted); max-width:240px; line-height:1.6; }
+  .footer-links h4,.footer-contact h4 { font-size:0.8rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .footer-links ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-links a { color:var(--text); text-decoration:none; font-size:0.88rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--orange); }
+  .footer-contact p { font-size:0.85rem; color:var(--text); margin-bottom:6px; }
+  .social-row { display:flex; gap:10px; margin-top:16px; }
+  .social-btn { width:38px; height:38px; border-radius:8px; background:var(--bg3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:1rem; text-decoration:none; transition:all 0.2s; }
+  .social-btn:hover { border-color:var(--orange); color:var(--orange); box-shadow:0 0 15px rgba(255,107,26,0.2); }
+  .footer-bottom { border-top:1px solid var(--border); padding-top:28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-bottom p { font-size:0.82rem; color:var(--muted); }
+  .footer-tagline { color:var(--orange); }
+
+  .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-delay-1 { transition-delay:.1s; }
+  .reveal-delay-2 { transition-delay:.2s; }
+  .reveal-delay-3 { transition-delay:.3s; }
+  .reveal-delay-4 { transition-delay:.4s; }
+  .center { text-align:center; }
+  .center .section-sub { margin:0 auto; }
+
+  @media (max-width:900px) {
+    .about-grid { grid-template-columns:1fr; gap:50px; }
+    .steps-row { grid-template-columns:repeat(2,1fr); gap:40px; }
+    .steps-row::before { display:none; }
+    .who-grid { grid-template-columns:repeat(2,1fr); }
+    .inv-grid { grid-template-columns:repeat(2,1fr); }
+    .startups-grid { grid-template-columns:1fr; }
+  }
+  @media (max-width:600px) {
+    .nav-links,.nav>.btn { display:none; }
+    .hamburger { display:flex; }
+    .who-grid,.inv-grid { grid-template-columns:1fr; }
+    .steps-row { grid-template-columns:1fr; }
+    .stat-item { min-width:140px; }
+    h1 { font-size:2.4rem; }
+  }
+  .mobile-menu { display:none; position:fixed; inset:0; z-index:200; background:rgba(10,10,15,0.98); backdrop-filter:blur(20px); flex-direction:column; align-items:center; justify-content:center; gap:32px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { color:var(--text); text-decoration:none; font-size:1.4rem; font-weight:600; transition:color 0.2s; }
+  .mobile-menu a:hover { color:var(--orange); }
+  .close-btn { position:absolute; top:24px; right:24px; font-size:1.5rem; cursor:pointer; color:var(--muted); background:none; border:none; }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="closeMobile()">✕</button>
+  <a href="#hero" onclick="closeMobile()">Home</a>
+  <a href="#startups" onclick="closeMobile()">Startups</a>
+  <a href="#investors" onclick="closeMobile()">Investors</a>
+  <a href="#cta" onclick="closeMobile()" class="btn btn-orange">Apply to Pitch</a>
+</div>
+
+<nav>
+  <span class="nav-logo">Karo<span>Pitch</span></span>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#startups">Startups</a></li>
+    <li><a href="#investors">Investors</a></li>
+    <li><a href="#cta">Apply</a></li>
+  </ul>
+  <a href="#cta" class="btn btn-orange">Apply to Pitch</a>
+  <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orb"></div>
+  <div class="hero-badge reveal">🇮🇳 India's Startup Pitch Platform</div>
+  <h1 class="reveal reveal-delay-1">Pitch Your Startup to<br><em>India's Top Investors</em></h1>
+  <p class="hero-sub reveal reveal-delay-2">Karo Pitch connects ambitious founders from across India — especially Bharat's Tier-2 and Tier-3 cities — with investors through curated pitch opportunities and a startup discovery platform.</p>
+  <div class="hero-btns reveal reveal-delay-3">
+    <a href="#cta" class="btn btn-orange">Apply to Pitch →</a>
+    <a href="#startups" class="btn btn-outline">Explore Startups</a>
+  </div>
+  <div class="stats-bar reveal reveal-delay-4">
+    <div class="stat-item"><span class="stat-num">5000+</span><span class="stat-label">Startup Stories</span></div>
+    <div class="stat-item"><span class="stat-num">28</span><span class="stat-label">States Covered</span></div>
+    <div class="stat-item"><span class="stat-num">200+</span><span class="stat-label">Investors Network</span></div>
+    <div class="stat-item"><span class="stat-num">Tier 2&3</span><span class="stat-label">Founder Focus</span></div>
+  </div>
+</section>
+
+<!-- ABOUT with INDIA MAP -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-left">
+      <span class="section-tag reveal">About Karo Pitch</span>
+      <h2 class="reveal reveal-delay-1">Bridging the Gap Between Founders &amp; Investors</h2>
+      <p class="reveal reveal-delay-2">Across India, thousands of talented founders are building innovative businesses but struggle to access investors. Karo Pitch bridges this gap by giving founders a structured platform to pitch directly to investors — no matter where they're from.</p>
+      <div class="feature-cards">
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">🎯</div>
+          <div><h4>Structured Pitch Platform</h4><p>Step-by-step process from application to live pitch, removing friction for first-time founders.</p></div>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">🇮🇳</div>
+          <div><h4>Bharat-First Ecosystem</h4><p>Built with Tier-2 and Tier-3 city founders in mind — inclusive, accessible, and deeply regional.</p></div>
+        </div>
+        <div class="feature-card reveal reveal-delay-4">
+          <div class="feature-icon">💼</div>
+          <div><h4>Direct Investor Access</h4><p>No gatekeepers. Pitch directly to angels, VCs, and early-stage investors looking for the next big startup.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INDIA MAP — real image with city dot overlay -->
+    <div class="map-wrapper reveal reveal-delay-2">
+      <div class="india-img-wrap">
+        <!--
+          India map image from Wikimedia Commons (public domain, SVG rendered as PNG).
+          Orange tint applied via CSS filter.
+          City pin positions below are % offsets calibrated to this specific image.
+        -->
+        <img
+          class="india-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/India_relief_location_map.jpg/500px-India_relief_location_map.jpg"
+          alt="India Map"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/India_states_blank.svg/500px-India_states_blank.svg.png'"
+        />
+        <!-- City pins: top/left % calibrated to the Wikimedia India relief map (500px wide) -->
+        <!-- Image covers: ~lat 6°N (bottom) to ~lat 37°N (top), lon 68°E (left) to 97°E (right) -->
+        <!-- Formula: left% = (lon - 68) / 29 * 100,  top% = (37 - lat) / 31 * 100 -->
+        <div class="city-pins">
+          <!-- Delhi: 28.6N 77.2E → left=31.7%, top=27.1% -->
+          <div class="pin" style="left:31.7%;top:27.1%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Delhi</span>
+          </div>
+          <!-- Mumbai: 19.1N 72.9E → left=16.9%, top=57.7% -->
+          <div class="pin" style="left:16.9%;top:57.7%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Mumbai</span>
+          </div>
+          <!-- Bengaluru: 12.97N 77.6E → left=33.1%, top=77.5% -->
+          <div class="pin" style="left:33.1%;top:77.5%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Bengaluru</span>
+          </div>
+          <!-- Jaipur: 26.9N 75.8E → left=26.9%, top=32.6% -->
+          <div class="pin" style="left:26.9%;top:32.6%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Jaipur</span>
+          </div>
+          <!-- Indore: 22.7N 75.8E → left=26.9%, top=46.1% -->
+          <div class="pin" style="left:26.9%;top:46.1%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Indore</span>
+          </div>
+          <!-- Ahmedabad: 23.0N 72.6E → left=15.9%, top=45.2% -->
+          <div class="pin" style="left:15.9%;top:45.2%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Ahmedabad</span>
+          </div>
+          <!-- Kolkata: 22.6N 88.4E → left=70.3%, top=46.5% -->
+          <div class="pin" style="left:70.3%;top:46.5%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Kolkata</span>
+          </div>
+          <!-- Hyderabad: 17.4N 78.5E → left=36.2%, top=63.9% -->
+          <div class="pin" style="left:36.2%;top:63.9%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Hyderabad</span>
+          </div>
+          <!-- Coimbatore: 11.0N 77.0E → left=31.0%, top=83.9% -->
+          <div class="pin" style="left:31.0%;top:83.9%">
+            <div class="pin-dot"></div><div class="pin-ring"></div>
+            <span class="pin-label">Coimbatore</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-center center">
+    <span class="section-tag reveal">Process</span>
+    <h2 class="reveal reveal-delay-1">How It Works</h2>
+    <p class="section-sub reveal reveal-delay-2">Four steps from application to funding — clear, fair, and founder-friendly.</p>
+    <div class="steps-row">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num-wrap">📋<span class="step-count">1</span></div>
+        <h3>Apply with Your Pitch Deck</h3>
+        <p>Submit your startup story and pitch deck through our simple application form.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num-wrap">✅<span class="step-count">2</span></div>
+        <h3>Get Shortlisted</h3>
+        <p>Our KaroStartup team reviews and curates the most promising pitches for investors.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num-wrap">🎤<span class="step-count">3</span></div>
+        <h3>Pitch Live to Investors</h3>
+        <p>Present your startup directly to a panel of investors in a live pitch session.</p>
+      </div>
+      <div class="step reveal reveal-delay-4">
+        <div class="step-num-wrap">🚀<span class="step-count">4</span></div>
+        <h3>Raise Funding &amp; Scale</h3>
+        <p>Close deals, access mentorship, and scale your startup to the next level.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO CAN APPLY -->
+<section id="who">
+  <div class="who-center center">
+    <span class="section-tag reveal">Eligibility</span>
+    <h2 class="reveal reveal-delay-1">Who Can Apply?</h2>
+    <p class="section-sub reveal reveal-delay-2">We welcome a diverse range of startups from every corner of India.</p>
+    <div class="who-grid">
+      <div class="who-card reveal reveal-delay-1"><div class="who-icon">🛍️</div><h3>D2C Brands</h3><p>Direct-to-consumer startups building the next generation of Indian brands with a strong digital presence.</p></div>
+      <div class="who-card reveal reveal-delay-2"><div class="who-icon">📱</div><h3>Consumer Startups</h3><p>Apps, platforms, and services targeting India's massive and growing consumer market.</p></div>
+      <div class="who-card reveal reveal-delay-3"><div class="who-icon">🏭</div><h3>MSMEs</h3><p>Micro, small, and medium enterprises looking to modernize, scale, or raise their first external capital.</p></div>
+      <div class="who-card reveal reveal-delay-1"><div class="who-icon">💻</div><h3>SaaS Startups</h3><p>Software-as-a-service companies solving real business problems for Indian and global markets.</p></div>
+      <div class="who-card reveal reveal-delay-2"><div class="who-icon">⚙️</div><h3>Manufacturing Businesses</h3><p>Industrial ventures leveraging technology to modernize traditional sectors.</p></div>
+      <div class="who-card reveal reveal-delay-3"><div class="who-icon">🌏</div><h3>Bharat-Focused Startups</h3><p>Any startup solving real problems for Tier-2 and Tier-3 India — agritech, edtech, healthtech, and beyond.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTORS -->
+<section id="investors">
+  <div class="investors-center center">
+    <span class="section-tag reveal">Investors</span>
+    <h2 class="reveal reveal-delay-1">Meet Investors Looking for<br>the Next Big Startup</h2>
+    <p class="section-sub reveal reveal-delay-2">Our growing network of angels, VCs, and venture partners actively seeking India's most promising founders.</p>
+    <div class="inv-grid">
+      <div class="inv-card reveal reveal-delay-1"><div class="inv-avatar">RM</div><h3>Rohit Mehta</h3><p class="inv-firm">Angel Investor</p><span class="inv-tag">Consumer Tech</span></div>
+      <div class="inv-card reveal reveal-delay-2"><div class="inv-avatar">AS</div><h3>Ananya Shah</h3><p class="inv-firm">Venture Partner</p><span class="inv-tag">SaaS</span></div>
+      <div class="inv-card reveal reveal-delay-3"><div class="inv-avatar">KJ</div><h3>Kunal Jain</h3><p class="inv-firm">Early Stage VC</p><span class="inv-tag">D2C Brands</span></div>
+      <div class="inv-card reveal reveal-delay-4"><div class="inv-avatar">PK</div><h3>Priya Kapoor</h3><p class="inv-firm">Angel Network</p><span class="inv-tag">MSME</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED STARTUPS -->
+<section id="startups">
+  <div class="startups-center">
+    <div class="center">
+      <span class="section-tag reveal">Featured</span>
+      <h2 class="reveal reveal-delay-1">Startups on Karo Pitch</h2>
+      <p class="section-sub reveal reveal-delay-2">Meet some of the innovative startups who've already pitched on our platform.</p>
+    </div>
+    <div class="startups-grid">
+      <div class="startup-card reveal reveal-delay-1">
+        <div class="startup-logo">🌿</div>
+        <div class="startup-meta"><span class="badge badge-cat">Sustainability</span><span class="badge badge-stage">Seed</span></div>
+        <h3>EcoWrap</h3>
+        <p>Eco-friendly, compostable packaging solutions for Indian e-commerce and food delivery brands — reducing plastic waste at scale.</p>
+        <span class="startup-city">Pune, Maharashtra</span>
+      </div>
+      <div class="startup-card reveal reveal-delay-2">
+        <div class="startup-logo">🌾</div>
+        <div class="startup-meta"><span class="badge badge-cat">D2C Food</span><span class="badge badge-stage">Pre-Seed</span></div>
+        <h3>FitGrain</h3>
+        <p>Millet-based healthy snack brands reimagining traditional Indian superfoods for modern urban and fitness-conscious consumers.</p>
+        <span class="startup-city">Bengaluru, Karnataka</span>
+      </div>
+      <div class="startup-card reveal reveal-delay-3">
+        <div class="startup-logo">⚙️</div>
+        <div class="startup-meta"><span class="badge badge-cat">Industrial AI</span><span class="badge badge-stage">Seed</span></div>
+        <h3>FactoryIQ</h3>
+        <p>Smart manufacturing analytics platform helping small and mid-size factories improve efficiency, reduce downtime, and cut costs.</p>
+        <span class="startup-city">Ahmedabad, Gujarat</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta">
+  <div class="cta-orb"></div>
+  <div class="cta-inner">
+    <span class="section-tag reveal">Get Started</span>
+    <h2 class="reveal reveal-delay-1">Ready to Pitch<br><em style="color:var(--orange)">Your Startup?</em></h2>
+    <p class="reveal reveal-delay-2">Join Karo Pitch and showcase your startup to investors across India. Your story deserves to be heard — wherever you're building from.</p>
+    <div class="cta-btns reveal reveal-delay-3">
+      <a href="#" class="btn btn-orange">Apply Now →</a>
+      <a href="#" class="btn btn-outline">Partner With Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="nav-logo">Karo<span>Pitch</span></span>
+        <p>India's premier startup pitch platform — connecting Bharat's boldest founders with investors who believe in them.</p>
+        <div class="social-row">
+          <a class="social-btn" href="#" title="LinkedIn">in</a>
+          <a class="social-btn" href="#" title="Instagram">ig</a>
+          <a class="social-btn" href="#" title="Twitter">𝕏</a>
+          <a class="social-btn" href="#" title="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#startups">Startups</a></li>
+          <li><a href="#investors">Investors</a></li>
+          <li><a href="#cta">Apply</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="583a2d2b31363d2b2b1833392a372b2c392a2c2d28763b3735">[email&#160;protected]</a></p>
+        <p>+91 93151 94393</p>
+        <p style="margin-top:10px;color:var(--muted);font-size:0.8rem;">KaroStartup — India's Leading<br>Startup Storytelling Platform</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 KaroPitch by KaroStartup. All rights reserved.</p>
+      <p class="footer-tagline">Made with ❤️ for Bharat's Founders</p>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => io.observe(el));
+setTimeout(() => { document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('visible')); }, 100);
+
+// ── MOBILE MENU ──
+function openMobile() { document.getElementById('mobileMenu').classList.add('open'); }
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.background = window.scrollY > 20 ? 'rgba(10,10,15,0.97)' : 'rgba(10,10,15,0.85)';
+});
+
+</script>
+</body>
+</html>

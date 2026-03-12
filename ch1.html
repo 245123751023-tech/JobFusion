@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Karo Pitch</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--orange:#FF6B1A;
+--bg:#0A0A0F;
+--card:#111118;
+--text:#ffffff;
+--muted:#9ca3af;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+
+body{
+background:var(--bg);
+font-family:'DM Sans',sans-serif;
+color:var(--text);
+line-height:1.6;
+}
+
+/* GRID BACKGROUND */
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+background-size:40px 40px;
+z-index:-1;
+}
+
+/* NAVBAR */
+
+nav{
+position:sticky;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 8%;
+background:rgba(10,10,15,0.85);
+backdrop-filter:blur(10px);
+border-bottom:1px solid rgba(255,255,255,0.05);
+z-index:1000;
+}
+
+.logo{
+font-family:Fraunces;
+font-size:22px;
+font-weight:700;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+gap:30px;
+}
+
+nav a{
+text-decoration:none;
+color:white;
+font-size:14px;
+}
+
+.cta{
+background:var(--orange);
+padding:10px 20px;
+border-radius:6px;
+font-weight:500;
+}
+
+/* HERO */
+
+.hero{
+min-height:90vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:0 8%;
+position:relative;
+}
+
+.hero h1{
+font-family:Fraunces;
+font-size:56px;
+max-width:900px;
+}
+
+.hero p{
+margin-top:20px;
+max-width:650px;
+color:var(--muted);
+}
+
+.buttons{
+margin-top:30px;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.btn{
+padding:14px 26px;
+border-radius:8px;
+font-size:15px;
+cursor:pointer;
+border:none;
+}
+
+.btn-primary{
+background:var(--orange);
+color:white;
+}
+
+.btn-outline{
+border:1px solid var(--orange);
+background:transparent;
+color:var(--orange);
+}
+
+/* ORB */
+
+.orb{
+position:absolute;
+width:350px;
+height:350px;
+background:radial-gradient(circle, rgba(255,107,26,0.6), transparent);
+filter:blur(90px);
+top:20%;
+left:50%;
+transform:translateX(-50%);
+animation:float 6s infinite ease-in-out;
+}
+
+@keyframes float{
+0%,100%{transform:translate(-50%,0)}
+50%{transform:translate(-50%,40px)}
+}
+
+/* STATS */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:30px;
+margin-top:60px;
+width:100%;
+max-width:900px;
+}
+
+.stat{
+text-align:center;
+}
+
+.stat h3{
+color:var(--orange);
+font-size:28px;
+}
+
+/* SECTION */
+
+section{
+padding:100px 8%;
+}
+
+h2{
+font-family:Fraunces;
+font-size:38px;
+margin-bottom:40px;
+}
+
+/* CARDS */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:var(--card);
+padding:28px;
+border-radius:12px;
+transition:0.3s;
+border:1px solid rgba(255,255,255,0.05);
+}
+
+.card:hover{
+transform:translateY(-8px);
+border-color:var(--orange);
+box-shadow:0 0 25px rgba(255,107,26,0.3);
+}
+
+/* STEPS */
+
+.steps{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:30px;
+}
+
+.step{
+text-align:center;
+}
+
+/* INVESTOR */
+
+.investor{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.avatar{
+width:45px;
+height:45px;
+border-radius:50%;
+background:var(--orange);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+}
+
+/* STARTUP */
+
+.startup-title{
+font-size:18px;
+font-weight:600;
+margin-bottom:6px;
+}
+
+/* CTA FINAL */
+
+.cta-final{
+text-align:center;
+padding:120px 8%;
+background:radial-gradient(circle at center, rgba(255,107,26,0.25), transparent);
+}
+
+/* FOOTER */
+
+footer{
+border-top:1px solid rgba(255,255,255,0.05);
+padding:40px 8%;
+text-align:center;
+color:var(--muted);
+}
+
+footer .links{
+margin-bottom:20px;
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+}
+
+/* SCROLL REVEAL */
+
+.reveal{
+opacity:0;
+transform:translateY(40px);
+transition:all 0.8s ease;
+}
+
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">KaroPitch</div>
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#">Startups</a></li>
+<li><a href="#">Investors</a></li>
+<li><a href="#">Apply</a></li>
+</ul>
+<a class="cta">Apply to Pitch</a>
+</nav>
+
+<section class="hero">
+<div class="orb"></div>
+
+<h1>Pitch Your Startup to India's Top Investors</h1>
+
+<p>Karo Pitch connects ambitious founders from across India — especially Bharat's Tier-2 and Tier-3 cities — with investors through curated pitch opportunities and a startup discovery platform.</p>
+
+<div class="buttons">
+<button class="btn btn-primary">Apply to Pitch</button>
+<button class="btn btn-outline">Explore Startups</button>
+</div>
+
+<div class="stats">
+<div class="stat"><h3>5000+</h3>Startup Stories</div>
+<div class="stat"><h3>28</h3>States Covered</div>
+<div class="stat"><h3>200+</h3>Investors Network</div>
+<div class="stat"><h3>Tier 2 & 3</h3>Founder Focus</div>
+</div>
+
+</section>
+
+<section class="reveal">
+<h2>About Karo Pitch</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Structured Pitch Platform</h3>
+<p>Submit and present your startup with a professional pitch process built for early-stage founders.</p>
+</div>
+
+<div class="card">
+<h3>Bharat-First Ecosystem</h3>
+<p>Empowering founders from Tier-2 and Tier-3 cities across India to access capital and mentorship.</p>
+</div>
+
+<div class="card">
+<h3>Direct Investor Access</h3>
+<p>Connect directly with angel investors, VCs, and startup mentors through curated pitch sessions.</p>
+</div>
+
+</div>
+</section>
+
+<section class="reveal">
+<h2>How It Works</h2>
+
+<div class="steps">
+
+<div class="step">
+<h3>1</h3>
+<p>Apply with your pitch deck</p>
+</div>
+
+<div class="step">
+<h3>2</h3>
+<p>Get shortlisted by the KaroStartup team</p>
+</div>
+
+<div class="step">
+<h3>3</h3>
+<p>Pitch live to investors</p>
+</div>
+
+<div class="step">
+<h3>4</h3>
+<p>Raise funding and scale</p>
+</div>
+
+</div>
+</section>
+
+<section class="reveal">
+<h2>Who Can Apply</h2>
+
+<div class="cards">
+
+<div class="card">D2C Brands</div>
+<div class="card">Consumer Startups</div>
+<div class="card">MSMEs</div>
+<div class="card">SaaS Startups</div>
+<div class="card">Manufacturing Businesses</div>
+<div class="card">Bharat-Focused Startups</div>
+
+</div>
+
+</section>
+
+<section class="reveal">
+<h2>Meet Investors Looking for the Next Big Startup</h2>
+
+<div class="cards">
+
+<div class="card investor">
+<div class="avatar">R</div>
+<div>
+<b>Rohit Mehta</b>
+<p>Angel Investor – Consumer Tech</p>
+</div>
+</div>
+
+<div class="card investor">
+<div class="avatar">A</div>
+<div>
+<b>Ananya Shah</b>
+<p>Venture Partner – SaaS</p>
+</div>
+</div>
+
+<div class="card investor">
+<div class="avatar">K</div>
+<div>
+<b>Kunal Jain</b>
+<p>Early Stage VC – D2C Brands</p>
+</div>
+</div>
+
+<div class="card investor">
+<div class="avatar">P</div>
+<div>
+<b>Priya Kapoor</b>
+<p>Angel Network – MSME</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="reveal">
+<h2>Featured Startups</h2>
+
+<div class="cards">
+
+<div class="card">
+<div class="startup-title">🌿 EcoWrap</div>
+<p>Eco-friendly packaging</p>
+<p>Pune • Seed</p>
+</div>
+
+<div class="card">
+<div class="startup-title">🌾 FitGrain</div>
+<p>Millet-based healthy snacks</p>
+<p>Bengaluru • Pre-Seed</p>
+</div>
+
+<div class="card">
+<div class="startup-title">⚙️ FactoryIQ</div>
+<p>Smart manufacturing analytics</p>
+<p>Ahmedabad • Seed</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="cta-final">
+<h2>Ready to Pitch Your Startup?</h2>
+<p>Join Karo Pitch and showcase your startup to investors across India.</p>
+
+<div class="buttons">
+<button class="btn btn-primary">Apply Now</button>
+<button class="btn btn-outline">Partner With Us</button>
+</div>
+</section>
+
+<footer>
+
+<div class="links">
+<a>About</a>
+<a>Startups</a>
+<a>Investors</a>
+<a>Apply</a>
+</div>
+
+<p>business@karostartup.com | +91 93151 94393</p>
+<p>Made with ❤️ for Bharat's Founders</p>
+
+</footer>
+
+<script>
+
+const reveals = document.querySelectorAll(".reveal");
+
+function reveal(){
+reveals.forEach(r=>{
+const top = r.getBoundingClientRect().top;
+if(top < window.innerHeight - 100){
+r.classList.add("active");
+}
+});
+}
+
+window.addEventListener("scroll",reveal);
+
+</script>
+
+</body>
+</html>

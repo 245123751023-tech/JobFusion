@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Connections - JOB-FUSION</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+      font-family: "Inter", sans-serif;
+    }
+
+    .container-card {
+      max-width: 1100px;
+      margin: 48px auto;
+      background: #161b22;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .section-title {
+      font-weight: 700;
+      border-left: 4px solid #58a6ff;
+      padding-left: 10px;
+      margin-bottom: 18px;
+      color: #58a6ff;
+    }
+
+    .user-pic {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #58a6ff;
+    }
+
+    /* Each field hover effect */
+    .field-card {
+      background: #21262d;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 6px;
+      transition: all 0.2s ease;
+      cursor: default;
+      color: #c9d1d9;
+    }
+
+    .field-card:hover {
+      background: #30363d;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .btn-custom {
+      transition: all 0.2s ease;
+    }
+
+    .btn-custom:hover {
+      transform: translateY(-2px);
+    }
+
+    .navbar-dark .navbar-brand, .navbar-dark .navbar-nav .nav-link {
+      color: #58a6ff;
+    }
+
+    .btn-outline-light {
+      border-radius: 30px;
+      border-color: #58a6ff;
+      color: #58a6ff;
+    }
+
+    .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    a {
+      color: #58a6ff;
+    }
+
+    a:hover {
+      color: #79c0ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+      <div class="d-flex">
+        <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container container-card">
+    <h2 class="text-center mb-4">My Connections</h2>
+
+    <!-- Friends -->
+    <section class="mb-4">
+      <h4 class="section-title text-success">Friends</h4>
+      {% if friends %}
+        <div class="row">
+          {% for u in friends %}
+            <div class="col-md-4 mb-3">
+              <div class="card p-3 h-100 text-center bg-dark border-0 shadow-sm">
+                {% if u.profile.profile_pic %}
+                  <img src="{{ u.profile.profile_pic.url }}" class="user-pic mb-3" alt="{{ u.username }}">
+                {% else %}
+                  <img src="{% static 'images/professionals1.png' %}" class="user-pic mb-3" alt="default">
+                {% endif %}
+
+                <div class="field-card">
+                  <strong>{{ u.profile.full_name|default:u.username }}</strong>
+                </div>
+
+                <div class="field-card">
+                  Role: {{ u.profile.Role }}
+                </div>
+
+                <div class="field-card">
+                  Bio: {{ u.profile.bio|truncatewords:10 }}
+                </div>
+
+                <div class="field-card">
+                  <a href="{% url 'viewothersprofile' u.id %}" class="btn btn-outline-primary btn-sm w-100 btn-custom mb-2">View Profile</a>
+                  <a href="{% url 'chat' u.username %}" class="btn btn-success btn-sm w-100 btn-custom">💬 Message</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">You have no friends yet.</p>
+      {% endif %}
+    </section>
+
+    <!-- Pending Outgoing -->
+    <section class="mb-4">
+      <h4 class="section-title text-warning">Pending Requests (Sent)</h4>
+      {% if pending_out %}
+        <div class="row">
+          {% for u in pending_out %}
+            <div class="col-md-4 mb-3">
+              <div class="card p-3 h-100 text-center bg-dark border-0 shadow-sm">
+                {% if u.profile.profile_pic %}
+                  <img src="{{ u.profile.profile_pic.url }}" class="user-pic mb-3">
+                {% else %}
+                  <img src="{% static 'images/professionals1.png' %}" class="user-pic mb-3">
+                {% endif %}
+
+                <div class="field-card">
+                  <strong>{{ u.profile.full_name|default:u.username }}</strong>
+                </div>
+
+                <div class="field-card">
+                  Role: {{ u.profile.Role }}
+                </div>
+
+                <div class="field-card">
+                  Bio: {{ u.profile.bio|truncatewords:10 }}
+                </div>
+
+                <div class="field-card">
+                  <a href="{% url 'viewothersprofile' u.id %}" class="btn btn-outline-secondary btn-sm w-100 btn-custom">View Profile</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No pending requests sent.</p>
+      {% endif %}
+    </section>
+
+    <!-- Incoming Requests -->
+    <section class="mb-4">
+      <h4 class="section-title text-danger">Incoming Requests</h4>
+      {% if incoming %}
+        <div class="row">
+          {% for u in incoming %}
+            <div class="col-md-4 mb-3">
+              <div class="card p-3 h-100 text-center bg-dark border-0 shadow-sm">
+                {% if u.profile.profile_pic %}
+                  <img src="{{ u.profile.profile_pic.url }}" class="user-pic mb-3">
+                {% else %}
+                  <img src="{% static 'images/professionals1.png' %}" class="user-pic mb-3">
+                {% endif %}
+
+                <div class="field-card">
+                  <strong>{{ u.profile.full_name|default:u.username }}</strong>
+                </div>
+
+                <div class="field-card">
+                  Role: {{ u.profile.Role }}
+                </div>
+
+                <div class="field-card">
+                  Bio: {{ u.profile.bio|truncatewords:10 }}
+                </div>
+
+                <div class="field-card">
+                  <a href="{% url 'viewothersprofile' u.id %}" class="btn btn-outline-primary btn-sm w-100 btn-custom mb-2">View Profile</a>
+                  <div class="d-flex gap-2">
+                    <a href="{% url 'accept' u.id %}" class="btn btn-success btn-sm flex-fill btn-custom">Accept</a>
+                    <a href="{% url 'reject' u.id %}" class="btn btn-danger btn-sm flex-fill btn-custom">Reject</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No incoming requests.</p>
+      {% endif %}
+    </section>
+
+    <!-- Other People -->
+    <section class="mb-4">
+      <h4 class="section-title text-primary">All People</h4>
+      {% if others %}
+        <div class="row">
+          {% for p in others %}
+            <div class="col-md-4 mb-3">
+              <div class="card p-3 h-100 text-center bg-dark border-0 shadow-sm">
+                {% if p.profile_pic %}
+                  <img src="{{ p.profile_pic.url }}" class="user-pic mb-3">
+                {% else %}
+                  <img src="{% static 'images/professionals2.png' %}" class="user-pic mb-3">
+                {% endif %}
+
+                <div class="field-card">
+                  <strong>{{ p.full_name }}</strong>
+                </div>
+
+                <div class="field-card">
+                  Role: {{ p.Role }}
+                </div>
+
+                <div class="field-card">
+                  Bio: {{ p.bio|truncatewords:10 }}
+                </div>
+
+                <div class="field-card">
+                  <a href="{% url 'viewothersprofile' p.user.id %}" class="btn btn-outline-primary btn-sm w-100 btn-custom mb-2">View Profile</a>
+                  <a href="{% url 'send_request' p.id %}" class="btn btn-primary btn-sm w-100 btn-custom">Connect</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No users found.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

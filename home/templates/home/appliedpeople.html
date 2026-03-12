@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicants List - JOB-FUSION</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: "Inter", sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #161b22;
+    }
+    .navbar .btn-outline-light {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transition: all 0.2s ease;
+    }
+    .navbar .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    .applicants-container {
+      max-width: 1000px;
+      margin: 50px auto;
+      background: rgba(20, 25, 35, 0.9);
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+    }
+
+    .page-title {
+      font-weight: 600;
+      border-bottom: 2px solid #58a6ff;
+      padding-bottom: 8px;
+      margin-bottom: 30px;
+      color: #58a6ff;
+      text-align: center;
+    }
+
+    .applicant-card {
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      transition: all 0.3s ease;
+    }
+
+    .field-card {
+      background: rgba(255,255,255,0.05);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+
+    .field-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      background: rgba(13,110,253,0.15);
+      box-shadow: 0 6px 16px rgba(0,180,255,0.4);
+    }
+
+    .job-title {
+      font-weight: 600;
+      color: #58a6ff;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+
+    a.resume-link {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a.resume-link:hover {
+      text-decoration: underline;
+      color: #79c0ff;
+    }
+
+    .alert-info {
+      border-radius: 12px;
+      background: rgba(13,110,253,0.1);
+      color: #e6edf3;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+    <div class="d-flex">
+      <a href="{% url 'home' %}" class="btn btn-outline-light">🏠 Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Applicants Section -->
+<div class="applicants-container">
+  <h2 class="page-title">Applicants List</h2>
+
+  {% if applications %}
+    <div class="row justify-content-center">
+      {% for i in applications %}
+        <div class="col-md-6">
+          <div class="applicant-card">
+            <div class="field-card job-title">{{ i.job.job }}</div>
+            <div class="field-card"><strong>Applicant:</strong> {{ i.user.username }}</div>
+            <div class="field-card"><strong>Phone:</strong> {{ i.user.profile.phone|default:"Not provided" }}</div>
+            <div class="field-card"><strong>Email:</strong> {{ i.user.email|default:"Not provided" }}</div>
+            <div class="field-card">
+              <strong>Resume:</strong>
+              {% if i.user.profile.resume %}
+                <a href="{{ i.user.profile.resume.url }}" target="_blank" class="resume-link">View Resume</a>
+              {% else %}
+                <span class="text-muted">Not uploaded</span>
+              {% endif %}
+            </div>
+            <div class="field-card">
+              <strong>Status:</strong>
+              {% if i.status == "Accepted" %}
+                <span class="badge bg-success">{{ i.status }}</span>
+              {% elif i.status == "Rejected" %}
+                <span class="badge bg-danger">{{ i.status }}</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">{{ i.status }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center py-4">
+      <h5 class="mb-0">No Applicants Found</h5>
+      <p class="text-muted mb-0">No one has applied yet.</p>
+    </div>
+  {% endif %}
+</div>
+
+</body>
+</html>

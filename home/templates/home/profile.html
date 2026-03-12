@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - JobFusion</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    /* ---------------- Base ---------------- */
+    body {
+      background: radial-gradient(circle at 20% 30%, #0d1117 0%, #0a0c10 100%);
+      color: #e6edf3;
+      font-family: "Inter", system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    a { color: #58a6ff; text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #79c0ff; }
+
+    /* ---------------- Navbar ---------------- */
+    .navbar { background: #0d1117; }
+    .navbar .btn-outline-light {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transition: all 0.2s ease;
+    }
+    .navbar .btn-outline-light:hover {
+      background: #58a6ff;
+      color: #0d1117;
+    }
+
+    /* ---------------- Card ---------------- */
+    .card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    /* ---------------- Profile Picture ---------------- */
+    .profile-pic {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #0d6efd;
+      margin: 0 auto 20px auto;
+      display: block;
+      box-shadow: 0 0 25px rgba(13,110,253,0.4);
+      transition: transform 0.3s ease;
+    }
+    .profile-pic:hover { transform: scale(1.05); }
+
+    /* ---------------- Field Hover ---------------- */
+    .profile-info p {
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .profile-info p:hover {
+      background: rgba(13,110,253,0.15);
+      border-left: 4px solid #0d6efd;
+      padding-left: 8px;
+    }
+
+    /* ---------------- Buttons ---------------- */
+    .btn-primary, .btn-outline-primary {
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary { background-color: #0d6efd; border: none; }
+    .btn-primary:hover { background-color: #0b5ed7; }
+    .btn-outline-primary { border-color: #0d6efd; color: #0d6efd; }
+    .btn-outline-primary:hover { background-color: #0d6efd; color: #fff; }
+
+    .text-muted { color: #8b949e !important; }
+
+    @media (max-width: 768px) { .col-md-6 { margin-bottom: 20px; } }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">JOB-FUSION</a>
+      <div class="d-flex">
+          <a href="{% url 'home' %}" class="btn btn-outline-light">Back to Home</a>
+      </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <h2 class="text-center fw-bold mb-5">My Profile</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card text-center">
+        {% if messages %}
+          {% for i in messages %}
+            <h3 style="color: #a855f7;"><strong>{{ i }}</strong></h3>
+          {% endfor %}
+        {% endif %}
+
+        {% if profile %}
+          {% if profile.profile_pic %}
+            <img src="{{ profile.profile_pic.url }}" alt="Profile Pic" class="profile-pic">
+          {% else %}
+            <img src="{% static 'images/professionals1' %}" alt="Default Profile" class="profile-pic">
+          {% endif %}
+        {% endif %}
+
+        <div class="mt-4 profile-info text-start">
+          <div class="row">
+            <!-- Column 1: Personal Info -->
+            <div class="col-md-6">
+              <h5 style="color:#58a6ff;">Personal Info</h5>
+              <p><strong>Username:</strong> {{ profile.user.username }}</p>
+              <p><strong>Full Name:</strong> {{ profile.full_name |default:"Not Provided" }}</p>
+              <p><strong>Email:</strong> {{ profile.user.email | default:"Not Provided" }}</p>
+              <p><strong>Linked-In URL:</strong> {{ profile.liurl | default:"Not Provided"}}</p>
+              <p><strong>Phone:</strong> {{ profile.phone|default:"Not Provided" }}</p>
+              <p><strong>Location:</strong> {{ profile.location|default:"Not Provided" }}</p>
+              <p><strong>Bio:</strong> {{ profile.Bio|default:"Not Provided" }}</p>
+            </div>
+
+            <!-- Column 2: Education / Work -->
+            <div class="col-md-6">
+              {% if profile.Role not in "HR Manager Recruiter" %}
+              <h5 style="color:#58a6ff;">Education & Skills</h5>
+              <p><strong>Resume:</strong>
+                {% if profile.resume %}
+                  <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary">View Resume</a>
+                {% else %}
+                  <span class="text-muted">No Resume Uploaded Yet</span>
+                {% endif %}
+              </p>
+              <p><strong>Skills:</strong> {{ profile.skills|default:"Not Provided" }}</p>
+              <p><strong>Other Skills:</strong> {{ profile.otherskills | default:"Not Provided" }}</p>
+              <p><strong>Experience:</strong> {{ profile.exp }}</p>
+              <p><strong>Graduation College:</strong> {{ profile.gclg }}</p>
+              <p><strong>Years:</strong> {{ profile.gstartingyear }} - {{ profile.gendingyear }}</p>
+              <p><strong>Branch:</strong> {{ profile.gbranch }}</p>
+              <p><strong>CGPA:</strong> {{ profile.gcgpa }}</p>
+              <p><strong>College Address:</strong> {{ profile.gclgadd}}</p>
+              <p><strong>Intermediate College:</strong> {{ profile.iclg }}</p>
+              <p><strong>Years:</strong> {{ profile.istartingyear }} - {{ profile.iendingyear }}</p>
+              <p><strong>Branch:</strong> {{ profile.ibranch }}</p>
+              <p><strong>CGPA:</strong> {{ profile.imarks }}</p>
+              <p><strong>School:</strong> {{ profile.schoolname }}</p>
+              <p><strong>SSC Year:</strong> {{ profile.sscyear }}</p>
+              {% else %}
+              <h5 style="color:#58a6ff;">Company Info</h5>
+              <p><strong>Company:</strong> {{ profile.cname}}</p>
+              <p><strong>Industry:</strong> {{ profile.industry }}</p>
+              <p><strong>Company Address:</strong> {{ profile.cadd }}</p>
+              <p><strong>Hirings From:</strong> {{ profile.hiringneeds |default:"AnyOne"}}</p>
+              <p><strong>Official Company Email:</strong> {{ profile.cemail }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <a href="{% url 'profile_editpage' %}" class="btn btn-primary w-100 mb-2">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
