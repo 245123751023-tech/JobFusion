@@ -87,8 +87,11 @@ ROOT_URLCONF = 'jobfusion.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #'DIRS':[TEMPLATES_DIR]   - 1.2
-        'DIRS': ['E:/Django/jobfusion/home/templates/home','E:/Django/jobfusion/authentication/templates/authentication','E:/Django/jobfusion/jobfusion/templates/jobfusion'],
+        'DIRS': [
+            BASE_DIR / 'home' / 'templates' / 'home',
+            BASE_DIR / 'authentication' / 'templates' / 'authentication',
+            BASE_DIR / 'jobfusion' / 'templates' / 'jobfusion',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
